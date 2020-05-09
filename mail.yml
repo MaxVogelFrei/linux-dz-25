@@ -1,0 +1,62 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: 
+    yum:
+      name: ['postfix','mailx','dovecot']
+      state: present
+    
+  - name: config postfix
+    copy: 
+      src: main.cf
+      dest: /etc/postfix/main.cf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart postfix
+
+  - name: create users
+    template: 
+      src: users.j2
+      dest:  /etc/dovecot/users
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: SELinux context
+    command: restorecon -v /etc/dovecot/users
+  
+  - name: rights for dovecot
+    file:
+      owner: vagrant
+      group: mail
+      path: /var/mail/vagrant
+      mode: 0600
+
+  - name: dovecot config
+    replace:
+      path: "{{ item.path }}"
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.replace }}"
+    with_items:
+      - { path: /etc/dovecot/conf.d/10-auth.conf, regexp: '^#!include auth-passwdfile.conf.ext', replace: '!include auth-passwdfile.conf.ext' }
+      - { path: /etc/dovecot/conf.d/10-auth.conf, regexp: '^#disable_plaintext_auth = yes', replace: 'disable_plaintext_auth = no' }
+      - { path: /etc/dovecot/conf.d/10-ssl.conf,  regexp: '^ssl = required', replace: 'ssl = no'}
+      - { path: /etc/dovecot/conf.d/10-mail.conf, regexp: '^#mail_location =', replace: 'mail_location = mbox:~/mail:INBOX=/var/mail/%u'}
+      - { path: /etc/dovecot/conf.d/10-mail.conf, regexp: '^#mail_privileged_group =', replace: 'mail_privileged_group = mail' }
+    notify: restart dovecot
+
+  handlers:
+
+  - name: restart postfix
+    service:
+      name: postfix
+      state: restarted
+      enabled: true
+
+  - name: restart dovecot
+    service:
+      name: dovecot
+      state: restarted
+      enabled: true
