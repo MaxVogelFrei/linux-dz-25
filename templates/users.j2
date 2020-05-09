@@ -1,0 +1,3 @@
+{% for user in users %}
+{{ user.name }}:{PLAIN}{{ user.pass }}:{{ user.uid }}:{{ user.gid }}::/home/{{ user.name }}
+{% endfor %}
