@@ -3,7 +3,3 @@ users:
     pass: vagrant
     uid: 1000
     gid: 1000
-  - name: dovecot
-    pass: dovecot
-    uid: 1001
-    gid: 1000
