@@ -34,7 +34,7 @@
       path: /var/mail/vagrant
       mode: 0600
 
-  - name: dovecot config
+  - name: config dovecot
     replace:
       path: "{{ item.path }}"
       regexp: "{{ item.regexp }}"

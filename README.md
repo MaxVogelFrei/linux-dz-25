@@ -14,7 +14,7 @@ vagrant up
 ```
 запускает стенд настраиваемый плэйбуком [mail.yml](mail.yml)  
 ### Конфиг postfix
-В конфиге postfix нужно указать 192.168.25.150 в inet_interfaces и подсети в mynetworks
+В конфиге postfix нужно указать 192.168.25.150 в **inet_interfaces** и подсети в **mynetworks**
 ```bash
 [root@mail ~]# postconf -n
 alias_database = hash:/etc/aliases
@@ -44,15 +44,15 @@ unknown_local_recipient_reject_code = 550
 ### конфиг dovecot
 в конфиге dovecot  
 путь к файлу почтового ящика  
-mail_location = mbox:~/mail:INBOX=/var/mail/%u  
-задать параметр mail_privileged_group для того чтоб Dovecot мог блокировать почтовые ящики (имел привилегии на это).  
-mail_privileged_group = mail  
+**mail_location = mbox:~/mail:INBOX=/var/mail/%u**  
+дать параметр mail_privileged_group для того чтоб Dovecot мог блокировать почтовые ящики (имел привилегии на это).  
+**mail_privileged_group = mail**  
 отключить ssl  
-ssl = no  
+**ssl = no**  
 включить авторизацию plaintext для упрощения доступа  
-disable_plaintext_auth = no  
+**disable_plaintext_auth = no**  
 включение конфига с указанием файла с пользователями  
-!include auth-passwdfile.conf.ext  
+**!include auth-passwdfile.conf.ext**  
 ```bash
 [root@mail ~]# doveconf -n
 # 2.2.36 (1f10bfa63): /etc/dovecot/dovecot.conf
