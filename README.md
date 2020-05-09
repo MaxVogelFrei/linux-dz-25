@@ -14,7 +14,7 @@ vagrant up
 ```
 запускает стенд настраиваемый плэйбуком [mail.yml](mail.yml)  
 ### Конфиг postfix
-В конфиге нужно указать 192.168.25.150 в **inet_interfaces** и подсети в **mynetworks**
+В конфиге нужно указать внешний адрес машины в **inet_interfaces** и подсети в **mynetworks**
 ```bash
 [root@mail ~]# postconf -n
 alias_database = hash:/etc/aliases
