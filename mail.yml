@@ -4,7 +4,7 @@
   tasks:
   - name: 
     yum:
-      name: ['postfix','mailx','dovecot']
+      name: ['postfix','dovecot']
       state: present
     
   - name: config postfix

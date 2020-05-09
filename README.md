@@ -10,6 +10,84 @@
 2. Конфиги postfix и dovecot
 ## Решение
 
+
+
+### Конфиг postfix
+```bash
+[root@mail ~]# postconf -n
+alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/aliases
+command_directory = /usr/sbin
+config_directory = /etc/postfix
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+debug_peer_level = 2
+debugger_command = PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin ddd $daemon_directory/$process_name $process_id & sleep 5
+html_directory = no
+inet_interfaces = localhost, $myhostname, 192.168.25.150
+inet_protocols = ipv4
+mail_owner = postfix
+mailq_path = /usr/bin/mailq.postfix
+manpage_directory = /usr/share/man
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+mynetworks = 192.168.0.0/16, 10.0.0.0/8, 127.0.0.0/8
+newaliases_path = /usr/bin/newaliases.postfix
+queue_directory = /var/spool/postfix
+readme_directory = /usr/share/doc/postfix-2.10.1/README_FILES
+sample_directory = /usr/share/doc/postfix-2.10.1/samples
+sendmail_path = /usr/sbin/sendmail.postfix
+setgid_group = postdrop
+unknown_local_recipient_reject_code = 550
+```
+### конфиг dovecot
+```bash
+[root@mail ~]# doveconf -n
+# 2.2.36 (1f10bfa63): /etc/dovecot/dovecot.conf
+# OS: Linux 3.10.0-957.12.2.el7.x86_64 x86_64 CentOS Linux release 7.6.1810 (Core)  
+# Hostname: mail.skynet.lan
+disable_plaintext_auth = no
+first_valid_uid = 1000
+mail_location = mbox:~/mail:INBOX=/var/mail/%u
+mail_privileged_group = mail
+mbox_write_locks = fcntl
+namespace inbox {
+  inbox = yes
+  location = 
+  mailbox Drafts {
+    special_use = \Drafts
+  }
+  mailbox Junk {
+    special_use = \Junk
+  }
+  mailbox Sent {
+    special_use = \Sent
+  }
+  mailbox "Sent Messages" {
+    special_use = \Sent
+  }
+  mailbox Trash {
+    special_use = \Trash
+  }
+  prefix = 
+}
+passdb {
+  driver = pam
+}
+passdb {
+  args = scheme=CRYPT username_format=%u /etc/dovecot/users
+  driver = passwd-file
+}
+ssl = no
+ssl_cert = </etc/pki/dovecot/certs/dovecot.pem
+ssl_key =  # hidden, use -P to show it
+userdb {
+  driver = passwd
+}
+userdb {
+  args = username_format=%u /etc/dovecot/users
+  driver = passwd-file
+}
+```
 ## Проверка
 ### Отправка
 ```bash
